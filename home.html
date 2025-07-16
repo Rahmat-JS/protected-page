@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Secure Site</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <!-- This container will be hidden by default and shown only if the user is logged in -->
+    <div id="content" class="hidden w-full max-w-2xl p-8 space-y-6 bg-white rounded-lg shadow-md text-center">
+        <h1 class="text-4xl font-bold text-gray-900">Welcome to the Home Page!</h1>
+        <p class="text-lg text-gray-600">This is a protected area. You are successfully logged in.</p>
+        <p class="text-md text-gray-800">Your email is: <span id="user-email" class="font-semibold"></span></p>
+        <div>
+            <button id="signout-button" class="mt-4 px-6 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out">
+                Sign Out
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loader" class="flex justify-center items-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+    </div>
+
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+        apiKey: "AIzaSyAyFPwzRQrt6M_yKYHiJuVckn-Nhf8s4Lg",
+        authDomain: "github-page-906ca.firebaseapp.com",
+        projectId: "github-page-906ca",
+        storageBucket: "github-page-906ca.firebasestorage.app",
+        messagingSenderId: "503538966638",
+        appId: "1:503538966638:web:a514dbb37135c711a0c67f",
+        measurementId: "G-3BMPXH6PGJ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // --- DOM Elements ---
+        const contentDiv = document.getElementById('content');
+        const loader = document.getElementById('loader');
+        const userEmailSpan = document.getElementById('user-email');
+        const signoutButton = document.getElementById('signout-button');
+
+        // --- Authentication State Observer ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in.
+                console.log('User is authenticated:', user.email);
+                
+                // Display user's email
+                userEmailSpan.textContent = user.email;
+
+                // Hide loader and show page content
+                loader.classList.add('hidden');
+                contentDiv.classList.remove('hidden');
+
+            } else {
+                // No user is signed in. Redirect to login page.
+                console.log('User is not authenticated. Redirecting to login page.');
+                window.location.href = 'index.html';
+            }
+        });
+
+        // --- Event Listener for Sign Out ---
+        signoutButton.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                // Sign-out successful.
+                // The onAuthStateChanged observer will automatically handle the redirect.
+                console.log('Sign-out successful.');
+            }).catch((error) => {
+                // An error happened.
+                console.error('Sign-out Error:', error);
+            });
+        });
+
+    </script>
+</body>
+</html>

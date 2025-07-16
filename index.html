@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Secure Site</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold text-gray-900">Welcome Back</h1>
+            <p class="mt-2 text-sm text-gray-600">Please sign in to access your account</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="space-y-6">
+            <div>
+                <label for="email" class="text-sm font-medium text-gray-700 sr-only">Email address</label>
+                <input id="email" name="email" type="email" autocomplete="email" required class="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Email address">
+            </div>
+
+            <div>
+                <label for="password" class="text-sm font-medium text-gray-700 sr-only">Password</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" required class="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Password">
+            </div>
+
+            <div id="error-message" class="text-sm text-red-600 text-center hidden"></div>
+
+            <div>
+                <button type="button" id="login-button" class="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    Sign In
+                </button>
+            </div>
+        </form>
+
+        <div class="text-center">
+            <p class="text-sm text-gray-600">
+                Don't have an account?
+                <button id="show-signup" class="font-medium text-indigo-600 hover:text-indigo-500">Sign Up</button>
+            </p>
+        </div>
+
+        <!-- Signup Form (hidden by default) -->
+        <form id="signup-form" class="space-y-6 hidden">
+             <div>
+                <label for="signup-email" class="text-sm font-medium text-gray-700 sr-only">Email address</label>
+                <input id="signup-email" name="signup-email" type="email" autocomplete="email" required class="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Email address">
+            </div>
+
+            <div>
+                <label for="signup-password" class="text-sm font-medium text-gray-700 sr-only">Password</label>
+                <input id="signup-password" name="signup-password" type="password" autocomplete="new-password" required class="w-full px-4 py-2 text-sm border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Password (min. 6 characters)">
+            </div>
+            
+            <div id="signup-error-message" class="text-sm text-red-600 text-center hidden"></div>
+
+            <div>
+                <button type="button" id="signup-button" class="w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
+                    Create Account
+                </button>
+            </div>
+             <div class="text-center">
+                <p class="text-sm text-gray-600">
+                    Already have an account?
+                    <button id="show-login" class="font-medium text-indigo-600 hover:text-indigo-500">Sign In</button>
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+        apiKey: "AIzaSyAyFPwzRQrt6M_yKYHiJuVckn-Nhf8s4Lg",
+        authDomain: "github-page-906ca.firebaseapp.com",
+        projectId: "github-page-906ca",
+        storageBucket: "github-page-906ca.firebasestorage.app",
+        messagingSenderId: "503538966638",
+        appId: "1:503538966638:web:a514dbb37135c711a0c67f",
+        measurementId: "G-3BMPXH6PGJ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // --- DOM Elements ---
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const showSignupButton = document.getElementById('show-signup');
+        const showLoginButton = document.getElementById('show-login');
+        
+        const loginButton = document.getElementById('login-button');
+        const signupButton = document.getElementById('signup-button');
+        
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const signupEmailInput = document.getElementById('signup-email');
+        const signupPasswordInput = document.getElementById('signup-password');
+        
+        const errorMessage = document.getElementById('error-message');
+        const signupErrorMessage = document.getElementById('signup-error-message');
+
+        // --- Authentication State Observer ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, redirect to home page.
+                console.log('User is signed in, redirecting...');
+                window.location.href = 'home.html';
+            } else {
+                // User is signed out.
+                console.log('User is signed out.');
+            }
+        });
+
+        // --- Event Listeners ---
+        
+        // Switch to Signup form
+        showSignupButton.addEventListener('click', () => {
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+        });
+        
+        // Switch to Login form
+        showLoginButton.addEventListener('click', () => {
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+        });
+
+        // Login button
+        loginButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    console.log('Login successful:', user);
+                    errorMessage.classList.add('hidden');
+                    // The onAuthStateChanged observer will handle the redirect.
+                })
+                .catch((error) => {
+                    console.error('Login Error:', error);
+                    errorMessage.textContent = error.message;
+                    errorMessage.classList.remove('hidden');
+                });
+        });
+
+        // Signup button
+        signupButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = signupEmailInput.value;
+            const password = signupPasswordInput.value;
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed up 
+                    const user = userCredential.user;
+                    console.log('Signup successful:', user);
+                    signupErrorMessage.classList.add('hidden');
+                    // The onAuthStateChanged observer will handle the redirect.
+                })
+                .catch((error) => {
+                    console.error('Signup Error:', error);
+                    signupErrorMessage.textContent = error.message;
+                    signupErrorMessage.classList.remove('hidden');
+                });
+        });
+
+    </script>
+</body>
+</html>
