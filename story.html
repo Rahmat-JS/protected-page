@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Title will be set dynamically -->
+    <title>Story App</title> 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png+xml" href="assets/icons/story-book.png">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-50">
+
+    <!-- Loading Spinner -->
+    <div id="page-loader" class="flex justify-center items-center h-screen">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Main Content (hidden until ready) -->
+    <div id="page-content" class="hidden w-full">
+        <!-- Header -->
+        <header class="main-header">
+            <nav class="header-nav">
+                <button id="home-button" class="icon-button" title="Back to Library">
+                    <img src="assets/icons/home.png" alt="Home">
+                </button>
+                
+                <div class="flex-1"></div> <!-- Spacer -->
+
+                <div class="dropdown">
+                    <button id="dropdown-button" class="icon-button" title="User Menu">
+                        <img src="assets/icons/user.png" alt="User Menu">
+                    </button>
+                    <div id="dropdown-content" class="dropdown-content">
+                        <div class="user-email">
+                            <span id="user-email"></span>
+                        </div>
+                        <button id="signout-button">Sign Out</button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Story Content -->
+        <main class="main-container pt-20">
+            <div class="bg-white p-6 sm:p-8 rounded-lg shadow-md">
+                <h2 id="story-title" class="text-3xl sm:text-4xl font-bold text-center text-gray-900 mb-6 border-b pb-4">
+                    <!-- Title will be dynamically inserted here -->
+                </h2>
+                <div id="story-text" class="story-viewer-content max-w-4xl mx-auto text-gray-700 text-left">
+                    <!-- Story text will be dynamically inserted here -->
+                    <div class="loader mx-auto"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/story-viewer.js"></script>
+</body>
+</html>
